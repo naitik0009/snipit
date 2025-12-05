@@ -1,0 +1,24 @@
+# --- Scala & SBT ---
+target/
+project/target/
+project/project/
+.bsp/
+.bloop/
+.metals/
+lib_managed/
+src_managed/
+project/boot/
+bin/
+
+# --- IDEs (IntelliJ / VS Code) ---
+.idea/
+*.iml
+.vscode/
+
+# --- Mac OS ---
+.DS_Store
+
+# --- Docker ---
+# We generally DO want to commit the Dockerfile, 
+# but we ignore local container data if you mapped it to a folder
+postgres_data/

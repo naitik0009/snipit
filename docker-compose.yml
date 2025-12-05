@@ -1,0 +1,14 @@
+verison: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: snipit_postgres
+    ports: 
+      - "5432:5432"
+    environment: 
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: snipit
+volumes: 
+  postgres_data:

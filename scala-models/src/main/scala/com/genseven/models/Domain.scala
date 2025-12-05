@@ -1,0 +1,3 @@
+object Domain extends App{
+
+}
