@@ -1,4 +1,4 @@
-verison: '3.8'
+version: '3.8'
 
 services:
   db:
@@ -12,3 +12,4 @@ services:
       POSTGRES_DB: snipit
 volumes: 
   postgres_data:
+                

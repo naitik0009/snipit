@@ -1,12 +1,14 @@
-name := "scala-utils"
+name := "scala-models"
 organization := "genSeven"
 version := "1.0.0"
-scalaVersion := "2.13.12"
+scalaVersion := "2.13.16"
 
-val pekkoHttpVersion = "1.0.0"
+val circeVersion = "0.14.6"
 
 libraryDependencies ++= Seq(
-    "org.apache.pekko" %% "pekko-http-spray-json" % pekkoHttpVersion,
+    "io.circe" %% "circe-core" % circeVersion,
+    "io.circe" %% "circe-generic" % circeVersion,
+    "io.circe" %% "circe-parser" % circeVersion,
     "genSeven" %% "scala-utils" % "1.0.0" //depends on project A
 )
 
