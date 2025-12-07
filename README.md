@@ -1,7 +1,7 @@
 🚀 SnipIt Backend (GenSeven Ecosystem)
 SnipIt is a distributed Code Snippet Manager built with a professional Scala Multi-Module Architecture.
 
-It demonstrates an Enterprise-grade setup using Shared Libraries, Local Artifact Publishing, Layered Architecture, and Dockerized Persistence.
+It demonstrates an Enterprise-grade setup using Shared Libraries, Local Artifact Publishing, Layered Architecture, and Dockerized Deployment.
 
 🏗️ Architecture
 The project is split into three decoupled projects to simulate a real-world microservice environment:
@@ -25,65 +25,66 @@ genSeven-workspace/
 🛠️ Tech Stack
 Language: Scala 2.13.12
 
-Build Tool: SBT (Simple Build Tool) 1.9.7
+Build Tool: SBT 1.9.7
 
 Server: Cask (Synchronous, Flask-like)
 
-Database: PostgreSQL 13 (via Docker)
+Database: PostgreSQL 13
 
-ORM/Driver: Slick 3.4.1 (Raw SQL Mapping)
+ORM: Slick 3.4.1 (Raw SQL Mapping)
 
 JSON: Circe 0.14.6
 
-Security: JBcrypt (Password Hashing)
+Containerization: Docker & Docker Compose
 
-⚡ Getting Started
+Base Image: Amazon Corretto 17 (Alpine) - Apple Silicon Compatible
+
+⚡ Getting Started (The Fast Way)
+We have fully dockerized the ecosystem. You can run the entire backend (App + Database) with one command.
+
 1. Prerequisites
-
-Java 17+ installed.
-
-SBT installed.
 
 Docker installed and running.
 
-2. Start the Infrastructure
+SBT installed (for building the JAR).
 
-Spin up the PostgreSQL database container.
+2. Build the Application Image
 
-Bash
-docker-compose up -d
-3. Build the Dependency Chain
-
-Since this utilizes a private local ecosystem, you must publish the shared libraries to your local Ivy cache before running the app.
-
-Step A: Publish Utils
+Before running Docker Compose, we must compile the code into a Fat JAR and build the container image.
 
 Bash
-cd scala-utils
-sbt clean publishLocal
-Step B: Publish Data Models
+# 1. Publish libraries locally (Required for compilation)
+cd scala-utils  && sbt clean publishLocal && cd ..
+cd scala-models && sbt clean publishLocal && cd ..
+
+# 2. Build the Fat JAR
+cd snipit
+sbt "project backend" assembly
+
+# 3. Build the Docker Image
+docker build -t snipit-backend:v1 -f backend/Dockerfile .
+3. Launch the Ecosystem
+
+Go back to the root workspace folder and start the cluster.
 
 Bash
-cd ../scala-models
-sbt clean publishLocal
-4. Run the Application
+cd ..
+docker-compose up
+Database: Starts on port 5432.
 
-Now that dependencies are resolved, run the main server.
+Backend: Starts on port 8080.
 
-Bash
-cd ../snipit
-sbt "project backend" run
-You should see: 🚀 Server online at http://localhost:8080/
+Networking: The backend automatically discovers the database via the internal Docker network snipit-net.
 
 🔌 API Documentation
-You can interact with the API using curl.
+Once the containers are running, you can interact with the API via localhost:8080.
 
 1. Register a User
 
 Bash
 curl -X POST http://localhost:8080/api/register \
    -H "Content-Type: application/json" \
-   -d '{"username": "naitik", "password": "password123"}'
+   -d '{"username": "dockerUser", "password": "password123"}'
 2. Create a Snippet
 
 Copy the id from the registration response.
@@ -93,8 +94,8 @@ curl -X POST http://localhost:8080/api/snippets \
    -H "Content-Type: application/json" \
    -d '{
          "userId": "REPLACE_WITH_UUID",
-         "title": "Scala Hello World",
-         "code": "println(\"Hello GenSeven\")",
+         "title": "Dockerized Scala",
+         "code": "println(\"Hello from inside the container!\")",
          "language": "scala"
        }'
 3. List Snippets
@@ -102,8 +103,8 @@ curl -X POST http://localhost:8080/api/snippets \
 Bash
 curl http://localhost:8080/api/snippets/REPLACE_WITH_UUID
 📁 Project Structure (Details)
-snipit/core: Contains the Repository trait. It knows what needs to be done but not how. Pure Scala.
+snipit/core: Contains the Repository trait. Pure Scala logic.
 
-snipit/backend: Contains PostgresDB (Slick implementation) and Server (Cask Routes). Handles the "Dirty Details" of HTTP and SQL.
+snipit/backend: Contains PostgresDB (Slick implementation) and Server (Cask Routes).
 
-application.conf: Handles Database credentials with support for Environment Variable overrides (${?DB_USER}).
+application.conf: Configured to accept environment variables (DB_USER, DB_PASSWORD) which are injected automatically by docker-compose.yml.

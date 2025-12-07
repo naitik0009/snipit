@@ -23,6 +23,14 @@ lazy val backend = (project in file("backend"))
   .settings(
     commonSettings,
     name := "snipit-backend",
+    // NEW: Fix deduplication error for Fat JAR
+    assembly / assemblyMergeStrategy := {
+      case PathList("META-INF", "services", xs @ _*) => MergeStrategy.concat
+
+      case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+      case "reference.conf"              => MergeStrategy.concat
+      case x                             => MergeStrategy.first
+    },
     libraryDependencies ++= Seq(
       // Cask
       "com.lihaoyi" %% "cask" % caskVersion,

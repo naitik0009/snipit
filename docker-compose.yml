@@ -1,15 +1,38 @@
 version: '3.8'
 
 services:
+  # --- SERVICE 1: The Database ---
   db:
     image: postgres:13
     container_name: snipit_postgres
-    ports: 
+    ports:
       - "5432:5432"
-    environment: 
+    environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       POSTGRES_DB: snipit
-volumes: 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - snipit-net
+    
+  # --- SERVICE 2: The Scala App ---
+  backend:
+    image: snipit-backend:v1
+    container_name: snipit_server
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_SERVER=db  # <--- The Magic Link
+      - DB_USER=admin
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    networks:
+      - snipit-net
+          
+volumes:
   postgres_data:
-                
+
+networks:
+  snipit-net:

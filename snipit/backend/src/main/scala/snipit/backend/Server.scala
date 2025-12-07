@@ -15,7 +15,7 @@ import io.circe.syntax._
 object Server extends MainRoutes {
   val db = PostgresDB
   println("Connecting to the db....")
-  Await.result(db.init(), 5.seconds)
+  Await.result(db.init(), 30.seconds)
   println("Connection Done......")
 
   //Helper 1 parse JSON (String -> Object)
@@ -87,6 +87,7 @@ object Server extends MainRoutes {
       case e: Exception => cask.Response(e.getMessage, statusCode = 500)
     }
   }
+  override def host = "0.0.0.0"
     override def port = 8000
     initialize()
 

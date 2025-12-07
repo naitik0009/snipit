@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+
+  "rushVersion": "5.163.0",
+
+  "pnpmVersion": "10.24.0",
+
+  "nodeSupportedVersionRange": ">=18.0.0",
+
+  "gitPolicy": {
+    "allowedEmailRegExps": [
+      "[^@]+@genseven\\.com"
+    ],
+    "sampleEmail": "dev@genseven.com"
+  },
+
+  "repository": {
+    "url": "https://github.com/naitik0009/snipit.git",
+    "defaultBranch": "main",
+    "defaultRemote": "origin"
+  },
+
+  "eventHooks": {
+    "preRushInstall": [],
+    "postRushInstall": [],
+    "preRushBuild": [],
+    "postRushBuild": []
+  },
+
+  "variants": [],
+
+  "projects": [
+    {
+      "packageName": "@genseven/api-client",
+      "projectFolder": "libraries/api-client",
+      "reviewCategory": "libraries"
+    },
+    {
+      "packageName": "@genseven/web",
+      "projectFolder": "apps/web",
+      "reviewCategory": "production"
+    },
+    {
+    "packageName": "@genseven/ui-components",
+    "projectFolder": "libraries/ui-components",
+    "reviewCategory": "production"
+  },
+  {
+    "packageName": "@genseven/dashboard",
+    "projectFolder": "apps/dashboard",
+    "reviewCategory": "production"
+  }
+  ]
+}
