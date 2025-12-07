@@ -9,5 +9,8 @@ type state = {
 //we created a custom hook useStore here 
 export const useStore = create<state>((set) => ({
     count: 0,
-    increment: ()=> set((state)=> ),
+    increment: ()=> set((state)=> ({count: state.count + 1}) ),
+    decrement: ()=> set((state)=> ({count: state.count - 1}) ),
+    reset: ()=> set(()=> ({count: 0}) )
+
 }));
